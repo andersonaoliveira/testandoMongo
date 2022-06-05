@@ -4,9 +4,12 @@ class PokemonController {
 
   static listarPokemons = (req, res) => {
     pokemons.find()
-      .populate('album')
       .exec((err, pokemons) => {
-      res.status(200).json(pokemons)
+      if(err) {
+        res.status(400).send({message: `${err.message} - pokemon não localizado.`})
+      } else {
+        res.status(200).json(pokemons)
+      }
   })
   }
 
@@ -14,7 +17,6 @@ class PokemonController {
     const id = req.params.id;
 
     pokemons.findById(id)
-      .populate('album', 'nome')
       .exec((err, pokemons) => {
       if(err) {
         res.status(400).send({message: `${err.message} - Id do pokemon não localizado.`})
